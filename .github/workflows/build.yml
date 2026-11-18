@@ -1,0 +1,19 @@
+name: Build PS3 PKG
+on: [push, workflow_dispatch]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: ps3dev/ps3dev:latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build
+        run: |
+          if [ -d "fear_of_dead" ] && [ -f "fear_of_dead/Makefile" ]; then
+            cd fear_of_dead
+          fi
+          echo "PS3DEV=$PS3DEV PSL1GHT=$PSL1GHT"
+          make pkg
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fear_of_dead_pkg
+          path: "**/*.pkg"
